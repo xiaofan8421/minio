@@ -21,6 +21,8 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/minio/minio/cmd/config"
+	"github.com/minio/minio/pkg/env"
 	"github.com/minio/minio/pkg/sync/errgroup"
 )
 
@@ -146,6 +148,10 @@ func (er erasureObjects) getLoadBalancedDisks(optimized bool) []StorageAPI {
 // object is "a/b/c/d", stat makes sure that objects ""a/b/c""
 // "a/b" and "a" do not exist.
 func (er erasureObjects) parentDirIsObject(ctx context.Context, bucket, parent string) bool {
+	enable := env.Get("_MINIO_PARENT_DIR_OBJECT", config.EnableOn) == config.EnableOn
+	if !enable {
+		return false
+	}
 	path := ""
 	segments := strings.Split(parent, slashSeparator)
 	for _, s := range segments {
