@@ -1,0 +1,100 @@
+syntax="proto3";
+
+package mds;
+
+message Status {
+    int32   code    = 1;
+    string  msg     = 2;
+}
+
+enum BucketType {
+    General = 0;
+    Cold    = 1;
+    Archive = 2;
+}
+
+enum BucketStatus {
+    Active   = 0;
+    ReadOnly = 1;
+    Deleted  = 2;
+}
+
+enum BucketACL {
+    Private         = 0;
+    PublicRead      = 1;
+    PublicReadWrite = 2;
+}
+
+message Bucket {
+    string       name       = 1;
+    string       ec         = 2;
+    BucketType   type       = 3;
+    BucketStatus status     = 4;
+    BucketACL    acl        = 5;
+    int64        created_at = 6;
+    int64        updated_at = 7;
+    int64        deleted_at = 8;
+}
+
+enum ObjectStatus {
+    O_Error      = 0;
+    O_Active     = 1;
+    O_Uploading  = 2;
+    O_Deleted    = 3;
+}
+
+message Object {
+    string          name        = 1;
+    uint64          size        = 2;
+    string          md5         = 3;
+    repeated string dist        = 4;
+    int64           part_size   = 5;
+    ObjectStatus    status      = 6;
+    bool            public      = 7;
+    int64           created_at  = 11;
+}
+
+message Empty {
+}
+
+enum ReqType {
+    BUCKET = 0;
+    OBJECT = 1;
+}
+
+message GetBucketReq {
+    string name  = 1;
+}
+
+message GetBucketResp {
+    Status status = 1; 
+    Bucket data   = 2;
+}
+
+message ListBucketResp {
+    Status          status = 1;
+    repeated string data   = 2;
+}
+
+message DelBucketReq {
+    string name  = 1;
+}
+
+service ServerService {
+    // bucket
+    rpc GetBucket(GetBucketReq) returns (GetBucketResp);
+    rpc CreateBucket(Bucket) returns (Status);
+    rpc ListBuckets(Empty) returns (ListBucketResp);
+    rpc DelBucket(DelBucketReq) returns (Status);
+    rpc UpdateBucketACL(Empty) returns (Empty);
+
+    // object
+    rpc CreateObject(Empty) returns (Empty);
+    rpc UpdateObject(Empty) returns (Empty);
+    rpc GetObject(Empty) returns (Empty);
+    rpc DelObject(Empty) returns (Empty);
+
+
+    rpc Alive(Empty) returns (Empty);
+};
+

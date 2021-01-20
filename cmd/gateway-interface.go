@@ -28,6 +28,7 @@ const (
 	HDFSBackendGateway  = "hdfs"
 	NASBackendGateway   = "nas"
 	S3BackendGateway    = "s3"
+	BVSBackendGateway   = "bvs"
 )
 
 // Gateway represents a gateway backend.

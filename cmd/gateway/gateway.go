@@ -33,6 +33,9 @@ import (
 
 	// GCS (use only if you must, GCS already supports S3 API)
 	_ "github.com/minio/minio/cmd/gateway/gcs"
+
+	// BVS
+	_ "github.com/xiaofan8421/minio/cmd/gateway/bvs"
 	// gateway functionality is frozen, no new gateways are being implemented
 	// or considered for upstream inclusion at this point in time. if needed
 	// please keep a fork of the project.
